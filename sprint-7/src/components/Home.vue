@@ -1,10 +1,7 @@
 <template>
-    <inicio v-if="showInicio" @mostrar="mostrar" />
     <div class="container">
         <div class="row">
-
-
-            <div class="col" v-if="!showInicio">
+            <div class="col">
                 <p>¿Qué quieres hacer?</p>
                 <form @submit.prevent="handleSubmit">
                     <div>
@@ -46,7 +43,7 @@
 
                 <p class="m-2">total:{{ suma }}€</p>
 
-                <button @click="mostrar" class="m-2">Atras</button>
+                <button class="btn btn-primary m-2"><router-link to="/" class="text-white">Atras</router-link></button>
 
                 <div class="mb-5 mt-3">
                     
@@ -70,7 +67,7 @@
 
 
             <pressupostList :listaPresupuestos="listaPresupuestos" @ordenAlfabetico="ordenAlfabetico"
-                @ordenFecha="ordenFecha" @reinicio="reinicio" v-if="!showInicio" />
+                @ordenFecha="ordenFecha" @ordenImporte="ordenImporte" @reinicio="reinicio"/>
 
 
         </div>
@@ -82,7 +79,6 @@
 <script setup>
 import { ref, reactive, watch } from 'vue';
 import Panell from '@/components/Panell.vue';
-import inicio from '@/components/inicio.vue'
 import pressupostList from '@/components/pressupostList.vue'
 
 import { useRoute, useRouter } from 'vue-router';
@@ -111,7 +107,6 @@ let suma = ref(0);
 let id = 0;
 
 let showPanell = ref(false)
-let showInicio = ref(true);
 
 let listaPresupuestos = reactive([]);
 
@@ -155,48 +150,49 @@ const decrementIdio = (valorArecuperar) => {
 }
 
 const total = (e) => {
-    if (!jobs.includes(e)) {
-        jobs.push(e);
-        precio.value = jobs.reduce((a, b) => a + b, 0);
-        precio.value = precio.value + final.value;
-        suma.value = precio.value
 
 
-    } else {
-        for (let i = 0; i < jobs.length; i++) {
-            if (jobs[i] == e) {
-                jobs.splice(i, 1);
-                precio.value = jobs.reduce((a, b) => a + b, 0);
-                precio.value = precio.value + final.value;
-                suma.value = precio.value
-            }
-        }
+    if(paginaWeb.checked == true && e == 500){
+        precio.value = precio.value + 500;
     }
+
+    if(paginaWeb.checked == false && e == 500){
+        precio.value = precio.value - 500;
+    }
+
+
+
+    if(SEO.checked == true && e == 300){
+        precio.value = precio.value + 300;
+    }
+    if(SEO.checked == false && e == 300){
+        precio.value = precio.value - 300;
+    }
+
+
+
+    if(Ads.checked == true && e == 200){
+        precio.value = precio.value + 200;
+    } 
+    if(Ads.checked == false && e == 200){
+        precio.value = precio.value - 200;
+    } 
+
+    suma.value = precio.value
+    
 }
 
 const show = () => {
     if (showPanell.value == true) {
         showPanell.value = false;
-        pagines.value = 0;
-        idiomes.value = 0;
-        sumPagines(0);
-        sumIdiomes(0);
-        
-        
+    
     } else {
         showPanell.value = true
         sumPagines(1);
-        sumIdiomes(1);
+        sumIdiomes(1)
     };
 };
 
-const mostrar = () => {
-    if (showInicio.value == true) {
-        showInicio.value = false;
-    } else {
-        showInicio.value = true;
-    }
-}
 
 const handleSubmit = () => {
     const date = new Date();
@@ -215,14 +211,17 @@ const handleSubmit = () => {
     } else {
         listaPresupuestos.push(obj);
     }
-    
     presupuesto = '';
     cliente = '';
     paginaWeb.checked = false;
     SEO.checked = false;
     Ads.checked = false;
-    showPanell.value = false
-    suma.value = 0
+    showPanell.value = false;
+    suma.value = 0;
+    final.value = 0;
+    precio.value = 0;
+    pagines.value = 0;
+    idiomes.value = 0;
 
 }
 
@@ -235,7 +234,10 @@ const ordenAlfabetico = () => {
 const ordenFecha = () => {
 
     let sort = listaPresupuestos.sort((a, b) => a.Fecha - b.Fecha);
+}
 
+const ordenImporte = () => {
+    let sort = listaPresupuestos.sort((a, b) => a.Total - b.Total)
 }
 
 const reinicio = () => {
@@ -253,7 +255,7 @@ const checkValue = () => {
     seoValue = SEO.checked;
     adsValue = Ads.checked
 
-    router.replace({path: '/', query:{Nombre: presupuesto, Cliente: cliente, paginaWeb: webValue, SEO: seoValue, Ads: adsValue}})
+    router.replace({path: '/home', query:{Nombre: presupuesto, Cliente: cliente, paginaWeb: webValue, SEO: seoValue, Ads: adsValue}})
     
 }
 
@@ -278,24 +280,26 @@ watch(suma, (newVal, oldVal) => {
     
 })
 watch(precio, (newVal, oldVal) => {
-    console.log("precio"+ precio.value)
+    console.log("precio" + precio.value)
     return precio.value
+    
 })
 watch(final, (newVal, oldVal) => {
-    console.log("final"+ final.value)
+    console.log("final" + final.value)
     return final.value
+    
 })
 
 
 
 watch(pagines, (newVal, oldVal) => {
 
-    router.replace({path: '/', query:{Nombre: presupuesto, Cliente: cliente, paginaWeb: webValue, pagines: pagines.value, idiomas: idiomes.value, SEO: seoValue, Ads: adsValue}})
+    router.replace({path: '/home', query:{Nombre: presupuesto, Cliente: cliente, paginaWeb: webValue, pagines: pagines.value, idiomas: idiomes.value, SEO: seoValue, Ads: adsValue}})
 });
 
 watch(idiomes, (newVal, oldVal) => {
     
-    router.replace({path: '/', query:{Nombre: presupuesto, Cliente: cliente, paginaWeb: webValue, pagines: pagines.value, idiomas: idiomes.value, SEO: seoValue, Ads: adsValue}})
+    router.replace({path: '/home', query:{Nombre: presupuesto, Cliente: cliente, paginaWeb: webValue, pagines: pagines.value, idiomas: idiomes.value, SEO: seoValue, Ads: adsValue}})
 });
 
 
