@@ -9,12 +9,12 @@
                 <form @submit.prevent="handleSubmit">
                     <div>
                         <label>Nombre del presupuesto:</label>
-                        <input type="text" v-model="presupuesto" class="m-2" name="presupuesto">
+                        <input type="text" v-model="presupuesto" class="m-2" name="presupuesto" required>
                     </div>
 
                     <div>
                         <label>Nombre del cliente:</label>
-                        <input type="text" v-model="cliente" class="m-2" name="cliente">
+                        <input type="text" v-model="cliente" class="m-2" name="cliente" required>
                     </div>
 
                     <div class="m-2">
@@ -181,6 +181,8 @@ const show = () => {
         idiomes.value = 0;
         sumPagines(0);
         sumIdiomes(0);
+        
+        
     } else {
         showPanell.value = true
         sumPagines(1);
@@ -208,7 +210,19 @@ const handleSubmit = () => {
         Total: suma.value
     };
 
-    listaPresupuestos.push(obj);
+    if ( !paginaWeb.checked && !SEO.checked && !Ads.checked){
+        alert('Debes seleccionar al menos un servicio')
+    } else {
+        listaPresupuestos.push(obj);
+    }
+    
+    presupuesto = '';
+    cliente = '';
+    paginaWeb.checked = false;
+    SEO.checked = false;
+    Ads.checked = false;
+    showPanell.value = false
+    suma.value = 0
 
 }
 
@@ -258,10 +272,24 @@ watch(buscar, (newVal, oldVal) => {
     }
 })
 
+watch(suma, (newVal, oldVal) => {
+    console.log("suma" + suma.value)
+    return suma.value
+    
+})
+watch(precio, (newVal, oldVal) => {
+    console.log("precio"+ precio.value)
+    return precio.value
+})
+watch(final, (newVal, oldVal) => {
+    console.log("final"+ final.value)
+    return final.value
+})
+
 
 
 watch(pagines, (newVal, oldVal) => {
-    
+
     router.replace({path: '/', query:{Nombre: presupuesto, Cliente: cliente, paginaWeb: webValue, pagines: pagines.value, idiomas: idiomes.value, SEO: seoValue, Ads: adsValue}})
 });
 
@@ -269,6 +297,7 @@ watch(idiomes, (newVal, oldVal) => {
     
     router.replace({path: '/', query:{Nombre: presupuesto, Cliente: cliente, paginaWeb: webValue, pagines: pagines.value, idiomas: idiomes.value, SEO: seoValue, Ads: adsValue}})
 });
+
 
 
 

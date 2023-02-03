@@ -8,7 +8,7 @@
                 <img src="@/img/plus-circle.svg" alt="plus"
                     @click.prevent="$emit('incrementPag', pagines), updateInput(1)" class="ms-2 me-2">
 
-                <input type="number" v-model="pagines" v-on:change="$emit('sumPagines', pagines)" class="col-2">
+                <input type="number" v-model="pagines" v-on:change="$emit('sumPagines', pagines)" class="col-2" min="1" readonly>
 
                 <img src="@/img/dash-circle.svg" alt="minus"
                     @click.prevent="$emit('decrementPag', pagines), updateInput(2)" class="ms-2">
@@ -43,7 +43,7 @@
                     @click.prevent="$emit('incrementIdio', idiomes), updateInput(3)" class="ms-2 me-2">
 
                 <input type="number" v-model="idiomes" v-on:change="$emit('sumIdiomes', idiomes)" name="precio"
-                    class="col-2">
+                    class="col-2" min="1" readonly>
 
                 <img src="@/img/dash-circle.svg" alt="minus"
                     @click.prevent="$emit('decrementIdio', idiomes), updateInput(4)" class="ms-2">
