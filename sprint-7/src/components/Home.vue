@@ -275,17 +275,14 @@ watch(buscar, (newVal, oldVal) => {
 })
 
 watch(suma, (newVal, oldVal) => {
-    console.log("suma" + suma.value)
     return suma.value
     
 })
 watch(precio, (newVal, oldVal) => {
-    console.log("precio" + precio.value)
     return precio.value
     
 })
 watch(final, (newVal, oldVal) => {
-    console.log("final" + final.value)
     return final.value
     
 })

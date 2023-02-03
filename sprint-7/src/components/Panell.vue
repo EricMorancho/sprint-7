@@ -100,7 +100,6 @@ const updateInput = (e) => {
             if (idiomes.value <= 1) {
                 idiomes.value = 1;
             };
-            console.log(idiomes.value)
             break;
     }
 }
